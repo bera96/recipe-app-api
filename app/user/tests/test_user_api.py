@@ -25,7 +25,7 @@ class PublicUserApiTests(TestCase):
         self.client = APIClient()
 
     def test_create_user_success(self):
-        """Test creating a user successful."""
+        """Test creating a user is successful."""
         payload = {
             'email': 'test@example.com',
             'password': 'testpass123',
@@ -108,7 +108,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class PrivateUserApiTest(TestCase):
+class PrivateUserApiTests(TestCase):
     """Test API requests that require authentication."""
 
     def setUp(self):
@@ -138,11 +138,11 @@ class PrivateUserApiTest(TestCase):
 
     def test_update_user_profile(self):
         """Test updating the user profile for the authenticated user."""
-        payload = {'name': 'Upddated Name', 'password': 'newpassword123'}
+        payload = {'name': 'Updated Name', 'password': 'newpassword123'}
 
         res = self.client.patch(ME_URL, payload)
 
         self.user.refresh_from_db()
         self.assertEqual(self.user.name, payload['name'])
-        self.assertTrue(self.user.check_password, payload['password'])
+        self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
